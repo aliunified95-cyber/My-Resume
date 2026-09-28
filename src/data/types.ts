@@ -3,20 +3,18 @@
  * The content itself lives in `resume.ts` — you should rarely need to edit this file.
  */
 
-/** Keys of the illustrated scenes available to the journey (see src/scenes/layouts.ts). */
-export type SceneKey =
-  | 'school'
-  | 'university'
-  | 'store'
-  | 'finance'
-  | 'telecom'
-  | 'digital'
-  | 'treasury'
-  | 'team'
-  | 'eshop'
-  | 'network'
-  | 'academic'
-  | 'horizon';
+/**
+ * The image that represents a journey stage. Any SVG, PNG or WebP works —
+ * put the file in /public/images and reference it as "images/…".
+ */
+export interface StageVisual {
+  /** The main image, shown large in the centre of the stage. */
+  src: string;
+  /** What the image shows, for screen readers and when images fail to load. */
+  alt: string;
+  /** Optional smaller images that float around the main one (up to four). Decorative. */
+  extras?: string[];
+}
 
 export interface Media {
   /** Path to a file in /public (e.g. "images/university-certificate.webp") or a full URL. */
@@ -58,8 +56,8 @@ export interface JourneyStage {
   /** Unique, URL-safe id. Used by `journeyOrder` and by `skillGroups[].developedIn`. */
   id: string;
   kind: 'education' | 'experience' | 'goal';
-  /** Which illustration represents this stage. Reuse any key when adding a new job. */
-  scene: SceneKey;
+  /** The image for this stage, and the floating extras around it. */
+  visual: StageVisual;
   /** Role or qualification. */
   title: string;
   /** Short label for the progress indicator (defaults to title). */

@@ -9,7 +9,10 @@ import {
   skillGroups,
   stageById,
 } from '../src/data/resume';
-import { POOL, sceneLayouts } from '../src/scenes/layouts';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+
+const publicDir = path.resolve(__dirname, '../public');
 
 function strings(value: unknown): string[] {
   if (typeof value === 'string') return [value];
@@ -59,8 +62,15 @@ describe('résumé content', () => {
     for (const id of currentFocus.stageIds) expect(stageById(id), id).toBeDefined();
   });
 
-  it('has an illustration for every stage', () => {
-    for (const stage of journey) expect(sceneLayouts[stage.scene], stage.id).toBeDefined();
+  it('has an image, with alt text, for every stage — and every image file exists', () => {
+    for (const stage of journey) {
+      expect(stage.visual.alt.length, stage.id).toBeGreaterThan(0);
+      expect((stage.visual.extras ?? []).length, stage.id).toBeLessThanOrEqual(4);
+      for (const src of [stage.visual.src, ...(stage.visual.extras ?? [])]) {
+        if (/^https?:/.test(src)) continue;
+        expect(existsSync(path.join(publicDir, src)), `${stage.id}: public/${src}`).toBe(true);
+      }
+    }
   });
 
   it('never nests placeholders (so they highlight correctly)', () => {
@@ -79,19 +89,6 @@ describe('résumé content', () => {
       expect(m!.alt).toBeTypeOf('string');
       expect(m!.width).toBeGreaterThan(0);
       expect(m!.height).toBeGreaterThan(0);
-    }
-  });
-});
-
-describe('scene layouts', () => {
-  it('draw every scene with the same pool of primitives', () => {
-    for (const [key, layout] of Object.entries(sceneLayouts)) {
-      expect(layout.rects, key).toHaveLength(POOL.rects);
-      expect(layout.lines, key).toHaveLength(POOL.lines);
-      expect(layout.circles, key).toHaveLength(POOL.circles);
-      const numbers = JSON.stringify(layout).match(/-?\d+(\.\d+)?|null|NaN/g) ?? [];
-      expect(numbers, key).not.toContain('null');
-      expect(numbers, key).not.toContain('NaN');
     }
   });
 });

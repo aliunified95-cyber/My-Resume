@@ -1,8 +1,7 @@
 import { memo, type Ref } from 'react';
 import type { JourneyStage } from '../data/types';
-import { sceneAlt, sceneLayouts } from '../scenes/layouts';
-import { ScenePool } from '../scenes/ScenePool';
 import { AchievementList } from './AchievementList';
+import { StageVisual } from './StageVisual';
 import { SkillsDisplay } from './SkillsDisplay';
 import { Text } from './Text';
 import { ArrowIcon } from './Icons';
@@ -41,7 +40,7 @@ export const TransformationStage = memo(function TransformationStage({ stage, in
       data-stage-index={index}
     >
       <div className="stage__art-static">
-        <ScenePool layout={sceneLayouts[stage.scene]} detailScenes={[stage.scene]} label={sceneAlt[stage.scene]} className="scene-svg" />
+        <StageVisual visual={stage.visual} />
       </div>
       <div className="stage__text">
         <p className="stage__meta">

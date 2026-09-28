@@ -1,7 +1,6 @@
 import { projects, stageById } from '../data/resume';
-import { sceneAlt, sceneLayouts } from '../scenes/layouts';
-import { ScenePool } from '../scenes/ScenePool';
 import { ArrowUpRightIcon } from './Icons';
+import { StageVisual } from './StageVisual';
 import { isPlaceholder, Text } from './Text';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -19,7 +18,6 @@ export function ProjectShowcase() {
       <ol className="projects__list">
         {projects.map((project, i) => {
           const stage = stageById(project.stageId);
-          const scene = stage?.scene ?? 'network';
           return (
             <li key={project.id} className="project">
               <article aria-labelledby={`${project.id}-title`}>
@@ -33,9 +31,9 @@ export function ProjectShowcase() {
                       loading="lazy"
                       decoding="async"
                     />
-                  ) : (
-                    <ScenePool layout={sceneLayouts[scene]} detailScenes={[scene]} label={sceneAlt[scene]} className="scene-svg" />
-                  )}
+                  ) : stage ? (
+                    <StageVisual visual={stage.visual} decorative className="visual--project" />
+                  ) : null}
                   <span className="project__index" aria-hidden="true">{pad(i + 1)}</span>
                 </div>
                 <div className="project__body">

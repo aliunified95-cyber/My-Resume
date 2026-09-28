@@ -1,0 +1,69 @@
+import { forwardRef, memo } from 'react';
+import type { StageVisual as Visual } from '../data/types';
+
+/** Where the floating extras sit around the main image, as % of the frame. */
+export const EXTRA_SLOTS = [
+  { x: -33, y: -29, s: 0.25 },
+  { x: 35, y: -25, s: 0.21 },
+  { x: 34, y: 31, s: 0.23 },
+  { x: -35, y: 29, s: 0.19 },
+];
+
+interface Props {
+  visual: Visual;
+  /** Hidden from assistive tech (used in the animated stack, where the text carries the meaning). */
+  decorative?: boolean;
+  /** Load immediately instead of lazily. */
+  eager?: boolean;
+  className?: string;
+}
+
+/**
+ * A stage's image: one main SVG with up to four smaller ones floating around
+ * it. The journey engine animates the pieces independently for depth.
+ */
+export const StageVisual = memo(
+  forwardRef<HTMLElement, Props>(function StageVisual({ visual, decorative = false, eager = false, className = '' }, ref) {
+    const extras = (visual.extras ?? []).slice(0, EXTRA_SLOTS.length);
+    return (
+      <figure ref={ref} className={`visual ${className}`.trim()} aria-hidden={decorative || undefined}>
+        <span className="visual__glow" aria-hidden="true" />
+        <img
+          className="visual__main"
+          src={visual.src}
+          alt={decorative ? '' : visual.alt}
+          width={512}
+          height={512}
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+          draggable={false}
+        />
+        {extras.map((src, i) => {
+          const slot = EXTRA_SLOTS[i];
+          return (
+            <img
+              key={`${src}-${i}`}
+              className="visual__extra"
+              data-extra={i}
+              src={src}
+              alt=""
+              aria-hidden="true"
+              width={256}
+              height={256}
+              loading={eager ? 'eager' : 'lazy'}
+              decoding="async"
+              draggable={false}
+              style={
+                {
+                  '--x': `${slot.x}%`,
+                  '--y': `${slot.y}%`,
+                  '--s': slot.s,
+                } as React.CSSProperties
+              }
+            />
+          );
+        })}
+      </figure>
+    );
+  }),
+);

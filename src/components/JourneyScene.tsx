@@ -1,15 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { journey } from '../data/resume';
-import type { SceneKey } from '../data/types';
-import { clamp, easeInOutCubic, lerp, smoothstep } from '../lib/math';
+import { layerState } from '../lib/appleTransition';
+import { clamp, easeInOutCubic, smoothstep } from '../lib/math';
 import type { MotionMode } from '../lib/motion';
 import { prefersReducedMotion } from '../lib/motion';
-import { jumpQ, panelOpacity, qToScroll, revealAt, scrollToQ, TAIL, timelineAt } from '../lib/timeline';
-import { letterTargets, openingLayout, POOL, sceneLayouts, type SceneLayout } from '../scenes/layouts';
-import { mixFill } from '../scenes/palette';
-import { ScenePool, type PoolRefs } from '../scenes/ScenePool';
+import { HOLD, jumpQ, panelOpacity, qToScroll, revealAt, scrollToQ, TAIL, timelineAt } from '../lib/timeline';
 import { Hero } from './Hero';
 import { ProgressIndicator } from './ProgressIndicator';
+import { EXTRA_SLOTS, StageVisual } from './StageVisual';
 import { TransformationStage } from './TransformationStage';
 
 interface Props {
@@ -18,32 +16,33 @@ interface Props {
   onEngineError: () => void;
 }
 
-/** How much later the last primitive starts moving than the first (0–1 of a morph). */
-const STAGGER = 0.28;
+interface Layer {
+  root: HTMLElement;
+  main: HTMLElement | null;
+  glow: HTMLElement | null;
+  extras: HTMLElement[];
+}
 
 /**
- * The scroll story: a pinned stage whose single SVG illustration morphs from
- * scene to scene while the matching chapter text fades in beside it.
+ * The scroll story: a pinned stage where each chapter's image hands over to
+ * the next Apple-style (zoom, blur and dissolve out; rise and focus in) while
+ * the matching chapter text fades in beside it.
  *
  * No scroll-jacking: the page scrolls natively and the stage is simply
  * `position: sticky`. All per-frame work writes straight to the DOM (no React
- * re-renders), and only runs when the scroll position actually changes.
+ * re-renders), uses only transform / opacity / filter, and only runs when the
+ * scroll position actually changes.
  */
 export function JourneyScene({ mode, onEngineError }: Props) {
   const stages = journey;
   const sceneCount = stages.length + 1;
-  const layouts: SceneLayout[] = useMemo(
-    () => [openingLayout(stages[0].scene), ...stages.map((s) => sceneLayouts[s.scene])],
-    [stages],
-  );
-  const detailKeys = useMemo(() => Array.from(new Set(stages.map((s) => s.scene))), [stages]);
 
   const sectionRef = useRef<HTMLElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const stackRef = useRef<HTMLDivElement>(null);
   const heroWrapRef = useRef<HTMLDivElement>(null);
   const fillRef = useRef<HTMLSpanElement>(null);
   const panelRefs = useRef<(HTMLElement | null)[]>([]);
-  const [pool] = useState<PoolRefs>(() => ({ rects: [], lines: [], circles: [], details: {} }));
+  const layerRefs = useRef<(HTMLElement | null)[]>([]);
   const metrics = useRef({ top: 0, scrollable: 1 });
   const [active, setActive] = useState(0);
   const panelSetters = useMemo(
@@ -53,27 +52,45 @@ export function JourneyScene({ mode, onEngineError }: Props) {
       }),
     [stages],
   );
+  const layerSetters = useMemo(
+    () =>
+      stages.map((_, i) => (el: HTMLElement | null) => {
+        layerRefs.current[i] = el;
+      }),
+    [stages],
+  );
 
   useEffect(() => {
     if (mode !== 'cinematic') return;
     const section = sectionRef.current;
-    const svg = svgRef.current;
+    const stack = stackRef.current;
     const heroWrap = heroWrapRef.current;
-    if (!section || !svg || !heroWrap) return;
+    if (!section || !stack || !heroWrap) return;
     // Cinematic layout CSS only applies once the engine is actually running,
     // so if JavaScript or the animation fails the static journey remains.
     const root = document.documentElement;
     root.dataset.engine = 'on';
+    const lite = root.dataset.perf === 'lite';
 
     const letters = Array.from(heroWrap.querySelectorAll<HTMLElement>('[data-letter]'));
     const heroFades = Array.from(heroWrap.querySelectorAll<HTMLElement>('[data-hero-fade]'));
     const hero = heroWrap.querySelector<HTMLElement>('.hero');
     const panels = panelRefs.current.slice(0, stages.length);
     const reveals = panels.map((p) => Array.from(p?.querySelectorAll<HTMLElement>('[data-reveal]') ?? []));
-    const targets = letterTargets(stages[0].scene);
-    const scenesByKey = new Map<SceneKey, number[]>();
-    stages.forEach((s, i) => scenesByKey.set(s.scene, [...(scenesByKey.get(s.scene) ?? []), i + 1]));
+    const layers: Layer[] = layerRefs.current.slice(0, stages.length).flatMap((el) =>
+      el
+        ? [
+            {
+              root: el,
+              main: el.querySelector<HTMLElement>('.visual__main'),
+              glow: el.querySelector<HTMLElement>('.visual__glow'),
+              extras: Array.from(el.querySelectorAll<HTMLElement>('[data-extra]')),
+            },
+          ]
+        : [],
+    );
 
+    let frameSize = { w: 1, h: 1 };
     let flights: { dx: number; dy: number }[] = [];
     let lastQ = -1;
     let lastActive = -1;
@@ -102,14 +119,19 @@ export function JourneyScene({ mode, onEngineError }: Props) {
         top: rect.top + window.scrollY,
         scrollable: Math.max(1, section.offsetHeight - window.innerHeight),
       };
+      const sr = stack.getBoundingClientRect();
+      frameSize = { w: sr.width || 1, h: sr.height || 1 };
+      // The name's letters converge in a small ring at the heart of the first image.
+      const cx = sr.left + sr.width / 2;
+      const cy = sr.top + sr.height / 2;
+      const ring = Math.min(sr.width, sr.height) * 0.12;
       letters.forEach((l) => (l.style.transform = ''));
-      const ctm = svg.getScreenCTM();
-      if (!ctm) return;
       flights = letters.map((l, i) => {
         const r = l.getBoundingClientRect();
-        const [tx, ty] = targets[i % targets.length];
-        const p = new DOMPoint(tx, ty).matrixTransform(ctm);
-        return { dx: p.x - (r.left + r.width / 2), dy: p.y - (r.top + r.height / 2) };
+        const angle = (i / Math.max(1, letters.length)) * Math.PI * 2 - Math.PI / 2;
+        const tx = cx + Math.cos(angle) * ring;
+        const ty = cy + Math.sin(angle) * ring;
+        return { dx: tx - (r.left + r.width / 2), dy: ty - (r.top + r.height / 2) };
       });
     };
 
@@ -119,62 +141,39 @@ export function JourneyScene({ mode, onEngineError }: Props) {
       if (!force && Math.abs(q - lastQ) < 0.0005) return;
       lastQ = q;
       const { scene, morph, position } = timelineAt(q, sceneCount);
-      const a = layouts[scene];
-      const b = layouts[Math.min(scene + 1, sceneCount - 1)];
-      const p = pool;
 
-      const local = (i: number, n: number) => easeInOutCubic(clamp((morph - (i / n) * STAGGER) / (1 - STAGGER)));
-
-      for (let i = 0; i < POOL.rects; i++) {
-        const el = p.rects[i];
-        if (!el) continue;
-        const t = local(i, POOL.rects);
-        const ra = a.rects[i];
-        const rb = b.rects[i];
-        const w = lerp(ra.w, rb.w, t);
-        const h = lerp(ra.h, rb.h, t);
-        el.setAttribute('x', lerp(ra.x, rb.x, t).toFixed(2));
-        el.setAttribute('y', lerp(ra.y, rb.y, t).toFixed(2));
-        el.setAttribute('width', w.toFixed(2));
-        el.setAttribute('height', h.toFixed(2));
-        el.setAttribute('rx', Math.min(lerp(ra.rx, rb.rx, t), w / 2, h / 2).toFixed(2));
-        el.setAttribute('stroke-opacity', lerp(ra.o, rb.o, t).toFixed(3));
-        el.setAttribute('fill-opacity', lerp(ra.f, rb.f, t).toFixed(3));
-        el.setAttribute('fill', mixFill(lerp(ra.c, rb.c, t)));
-      }
-      for (let i = 0; i < POOL.lines; i++) {
-        const el = p.lines[i];
-        if (!el) continue;
-        const t = local(i, POOL.lines);
-        const la = a.lines[i];
-        const lb = b.lines[i];
-        el.setAttribute('x1', lerp(la.x1, lb.x1, t).toFixed(2));
-        el.setAttribute('y1', lerp(la.y1, lb.y1, t).toFixed(2));
-        el.setAttribute('x2', lerp(la.x2, lb.x2, t).toFixed(2));
-        el.setAttribute('y2', lerp(la.y2, lb.y2, t).toFixed(2));
-        el.setAttribute('stroke-opacity', lerp(la.o, lb.o, t).toFixed(3));
-      }
-      for (let i = 0; i < POOL.circles; i++) {
-        const el = p.circles[i];
-        if (!el) continue;
-        const t = local(i, POOL.circles);
-        const ca = a.circles[i];
-        const cb = b.circles[i];
-        el.setAttribute('cx', lerp(ca.cx, cb.cx, t).toFixed(2));
-        el.setAttribute('cy', lerp(ca.cy, cb.cy, t).toFixed(2));
-        el.setAttribute('r', Math.max(0, lerp(ca.r, cb.r, t)).toFixed(2));
-        el.setAttribute('stroke-opacity', lerp(ca.o, cb.o, t).toFixed(3));
-        el.setAttribute('fill-opacity', lerp(ca.f, cb.f, t).toFixed(3));
-        el.setAttribute('fill', mixFill(lerp(ca.c, cb.c, t)));
-      }
-      scenesByKey.forEach((indices, key) => {
-        const el = p.details[key];
-        if (!el) return;
-        const op = Math.max(...indices.map((j) => clamp(1 - Math.abs(position - j) * 3.5)));
-        el.setAttribute('opacity', op.toFixed(3));
+      // Stage images.
+      layers.forEach((layer, i) => {
+        const index = i + 1;
+        const drift = clamp((q - index) / HOLD);
+        const s = layerState(position - index, q >= index ? drift : 0);
+        const { root: el, main, glow, extras } = layer;
+        if (!s.visible) {
+          if (el.style.visibility !== 'hidden') {
+            el.style.visibility = 'hidden';
+            el.style.opacity = '0';
+          }
+          return;
+        }
+        el.style.visibility = 'visible';
+        el.style.opacity = s.opacity.toFixed(3);
+        if (main) {
+          main.style.transform = `translate3d(0, ${(s.y * frameSize.h).toFixed(1)}px, 0) scale(${s.scale.toFixed(4)})`;
+          main.style.filter = lite || s.blur < 0.2 ? '' : `blur(${s.blur.toFixed(1)}px)`;
+        }
+        if (glow) glow.style.transform = `scale(${(0.8 + 0.2 * s.opacity * s.scale).toFixed(3)})`;
+        extras.forEach((x, k) => {
+          const slot = EXTRA_SLOTS[k];
+          const depth = 1 + k * 0.35;
+          const dx = (slot.x / 100) * frameSize.w * (s.spread - 1) * depth;
+          const dy = (slot.y / 100) * frameSize.h * (s.spread - 1) * depth + s.extraLift * depth * frameSize.h;
+          x.style.transform = `translate(-50%, -50%) translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) scale(${s.extraScale.toFixed(3)})`;
+          x.style.opacity = s.extraOpacity.toFixed(3);
+          x.style.filter = lite || s.blur < 0.2 ? '' : `blur(${(s.blur * 0.7).toFixed(1)}px)`;
+        });
       });
 
-      // Opening: the name's letters fly into the first scene.
+      // Opening: the name's letters fly into the first image as it arrives.
       const heroT = scene === 0 ? morph : 1;
       const n = letters.length;
       const step = n > 1 ? Math.min(0.03, 0.35 / (n - 1)) : 0;
@@ -182,8 +181,9 @@ export function JourneyScene({ mode, onEngineError }: Props) {
         const f = flights[i];
         if (!f) return;
         const e = easeInOutCubic(clamp((heroT - i * step) / (1 - step * (n - 1))));
-        l.style.transform = e > 0 ? `translate3d(${(f.dx * e).toFixed(1)}px, ${(f.dy * e).toFixed(1)}px, 0) scale(${(1 - 0.82 * e).toFixed(3)})` : '';
-        l.style.opacity = (1 - smoothstep(0.55, 0.98, e)).toFixed(3);
+        l.style.transform = e > 0 ? `translate3d(${(f.dx * e).toFixed(1)}px, ${(f.dy * e).toFixed(1)}px, 0) scale(${(1 - 0.85 * e).toFixed(3)})` : '';
+        l.style.opacity = (1 - smoothstep(0.45, 0.9, e)).toFixed(3);
+        l.style.filter = lite || e < 0.3 ? '' : `blur(${(smoothstep(0.3, 0.9, e) * 6).toFixed(1)}px)`;
       });
       const fade = clamp(1 - heroT * 3.2);
       heroFades.forEach((el) => (el.style.opacity = fade.toFixed(3)));
@@ -245,11 +245,18 @@ export function JourneyScene({ mode, onEngineError }: Props) {
       window.removeEventListener('resize', onResize);
       delete root.dataset.engine;
       // Hand the DOM back to CSS for static mode.
-      [...letters, ...heroFades, ...panels].forEach((el) => {
+      const touched = [
+        ...letters,
+        ...heroFades,
+        ...panels,
+        ...layers.flatMap((l) => [l.root, l.main, l.glow, ...l.extras]),
+      ];
+      touched.forEach((el) => {
         if (!el) return;
         el.style.transform = '';
         el.style.opacity = '';
         el.style.visibility = '';
+        el.style.filter = '';
       });
       if (hero) {
         hero.style.visibility = '';
@@ -258,7 +265,7 @@ export function JourneyScene({ mode, onEngineError }: Props) {
       panels.forEach((p) => p?.classList.remove('is-compact', 'is-tight'));
       reveals.flat().forEach((el) => el.classList.remove('is-in'));
     };
-  }, [mode, layouts, sceneCount, stages, onEngineError, pool]);
+  }, [mode, sceneCount, stages, onEngineError]);
 
   const jumpTo = useCallback(
     (index: number) => {
@@ -296,14 +303,11 @@ export function JourneyScene({ mode, onEngineError }: Props) {
     >
       <div className="story__sticky">
         <div className="story__art">
-          <ScenePool
-            svgRef={svgRef}
-            layout={layouts[0]}
-            detailScenes={detailKeys}
-            detailsVisible={false}
-            refs={pool}
-            className="stage-svg"
-          />
+          <div className="visual-stack" ref={stackRef} aria-hidden="true">
+            {stages.map((stage, i) => (
+              <StageVisual key={stage.id} ref={layerSetters[i]} visual={stage.visual} decorative eager={i < 2} className="visual--layer" />
+            ))}
+          </div>
         </div>
         <div className="story__hero" ref={heroWrapRef}>
           <Hero onBegin={onBegin} />

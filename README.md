@@ -1,13 +1,18 @@
 # Cinematic CV & Portfolio
 
-A scroll-driven personal CV website. As visitors scroll, the letters of your name fly into a school
-building, which transforms into a degree certificate, a shop front, a bank, a telecom branch, a
-digital storefront, a treasury dashboard, a team, an eShop, an order-to-activation network, a
-bookshelf, and finally a sunrise over an open road. One continuous illustration, one chapter at a
-time — followed by selected projects, a skills summary, your aim and future goal, and contact details.
+A scroll-driven personal CV website. As visitors scroll, the letters of your name gather into a
+school, and each chapter's image hands over to the next in the style of Apple's product pages: the
+current image zooms towards the viewer, blurs and dissolves while the next rises from the depth
+and sharpens into focus, with smaller images drifting around it for depth. School → graduation →
+store → bank → phone → laptop → chart → team → shopping cart → delivery → books → sunrise.
+It is followed by selected projects, a skills summary, your aim and future goal, and contact details.
 
 Built with **React + TypeScript + Vite**. No animation library: the page scrolls natively, the stage is
-`position: sticky`, and a small engine morphs one shared pool of SVG shapes between scenes.
+`position: sticky`, and a small engine drives transform, opacity and blur from the scroll position.
+
+The journey images are ready-made SVGs from Microsoft's
+[Fluent Emoji](https://github.com/microsoft/fluentui-emoji) set (MIT licence, see
+`public/images/journey/LICENSE`). Replace any of them with your own images.
 
 ---
 
@@ -61,7 +66,11 @@ Keep each stage to **two to four achievements** and don’t nest brackets inside
 {
   id: 'store-manager',          // unique, URL-safe
   kind: 'experience',           // 'education' | 'experience' | 'goal'
-  scene: 'store',               // which illustration to show (see below)
+  visual: {                     // the stage's image (see "Images" below)
+    src: 'images/journey/convenience-store.svg',
+    alt: 'A retail store',
+    extras: ['images/journey/shopping-bags.svg'], // optional, up to 4 floating images
+  },
   title: 'Store Manager',       // role or qualification
   shortTitle: 'Store Manager',  // optional: shorter label for the progress indicator
   organization: '[Company name]',
@@ -82,10 +91,9 @@ Keep each stage to **two to four achievements** and don’t nest brackets inside
 ## Adding a future job
 
 1. Add a new entry to the `experience` array in `src/data/resume.ts`.
-2. Pick a `scene` for it. Available scenes:
-   `school`, `university`, `store`, `finance`, `telecom`, `digital`, `treasury`, `team`,
-   `eshop`, `network`, `academic`, `horizon`. Reusing one is fine — e.g. `'network'` or `'team'`
-   for another leadership role.
+2. Give it a `visual`: drop an SVG (or PNG/WebP) into `public/images/journey/` and point `src`
+   at it, with a short `alt`. Add up to four `extras` for the floating images. Reusing images
+   already in the folder is fine.
 3. Add its `id` to `journeyOrder`, before `'aim'`.
 4. If the previous role has ended, change its `end` from `'Present'` and remove `ongoing: true`.
 5. Update `currentFocus.stageIds` and any `skillGroups[].developedIn` lists.
@@ -93,15 +101,21 @@ Keep each stage to **two to four achievements** and don’t nest brackets inside
 
 The progress indicator, résumé view, skills strips and scroll length all adjust automatically.
 
-*(Want a brand-new illustration? Scenes are defined in `src/scenes/layouts.ts` as positions for a
-shared pool of 30 rectangles, 18 lines and 16 circles on an 800 × 600 canvas, plus optional
-fine details in `src/scenes/SceneDetails.tsx`. Add a key to `SceneKey` in `src/data/types.ts`.)*
+*(The transition itself — zoom, blur, fade and the depth of the extras — is tuned in
+`src/lib/appleTransition.ts`.)*
 
 ---
 
 ## Images, photo and logos
 
-1. Put images in `public/images/` (WebP or AVIF, ideally under ~200 KB each).
+**Journey images.** `public/images/journey/` holds the SVGs used by the journey, the projects and
+the final scene. Any square-ish image with a transparent background works best (SVG or PNG).
+More ready-made images in the same style: <https://github.com/microsoft/fluentui-emoji>
+(use the `Color` SVGs) or <https://icon-sets.iconify.design/fluent-emoji/>.
+
+**Other images:**
+
+1. Put images in `public/images/` (SVG, WebP or AVIF, ideally under ~200 KB each).
 2. Reference them without a leading slash, e.g. `'images/certificate.webp'`.
 3. Always give `alt` text and the image’s real `width` and `height` (prevents layout shift).
 
@@ -109,10 +123,10 @@ Where images can go:
 
 - `personalDetails.photo` — optional profile photo, shown in the contact section and the résumé view.
 - `stage.media` — a logo, certificate or photo for a journey chapter (lazy-loaded).
-- `project.image` — replaces the project’s illustrated placeholder.
+- `project.image` — replaces the project’s image (which otherwise reuses its stage's images).
 
-Social-sharing image: replace `public/og-image.png` (1200 × 630). Favicon: replace
-`public/favicon.svg` and `public/apple-touch-icon.png` (180 × 180).
+Social-sharing image: replace `public/og-image.png` (1200 × 630). Favicon: the compass from the
+journey set (`index.html`) — point it at any SVG you like.
 
 ---
 
@@ -182,20 +196,20 @@ src/
   components/
     Hero.tsx                  opening scene (name letters)
     JourneyScene.tsx          sticky stage + scroll engine
-    TransformationStage.tsx   one chapter (text + static illustration)
+    TransformationStage.tsx   one chapter (text + still image)
+    StageVisual.tsx           a stage's main image + floating extras
     ProgressIndicator.tsx     chapter number, title, progress, jump buttons
     AchievementList.tsx, SkillsDisplay.tsx
     CurrentFocus.tsx, ProjectShowcase.tsx, SkillsSummary.tsx
-    AimAndGoal.tsx            final horizon scene
+    AimAndGoal.tsx            final sunrise scene
     ContactSection.tsx        contact links, form, footer
     AccessibleResumeView.tsx  printable résumé
     SiteHeader.tsx
-  scenes/
-    layouts.ts                shape positions for every scene
-    SceneDetails.tsx          fine details per scene
-    ScenePool.tsx             renders a scene as SVG
-  lib/                        timeline maths, motion preference, helpers
+  lib/
+    appleTransition.ts        the image hand-over curve (zoom, blur, fade, depth)
+    timeline.ts               scroll position → chapter maths
   styles/global.css           visual system and layouts
+public/images/journey/        journey SVGs (Fluent Emoji, MIT)
 scripts/prerender.mjs         injects prerendered HTML + SEO tags at build time
-tests/                        content and timeline tests
+tests/                        content, timeline and transition tests
 ```

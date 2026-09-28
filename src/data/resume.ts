@@ -7,10 +7,10 @@
  *    words (and drop the brackets). While `site.highlightPlaceholders` is true,
  *    placeholders are underlined on the page so you can spot any you missed.
  *  • The journey is shown in the order of `journeyOrder` (bottom of the file).
- *  • To add a future job: add an entry to `experience`, pick a `scene`
- *    (any SceneKey — e.g. 'network' or 'team'), then add its id to
+ *  • To add a future job: add an entry to `experience` with a `visual`
+ *    (an image plus optional floating extras), then add its id to
  *    `journeyOrder` before 'aim'.
- *  • Images go in /public/images and are referenced as "images/file.webp".
+ *  • Images go in /public/images and are referenced as "images/file.svg".
  *  • Your CV goes in /public/cv and is referenced in `personalDetails.cvFile`.
  *
  *  Nothing here is sent anywhere — but everything here is public once deployed,
@@ -26,6 +26,13 @@ import type {
   SiteMeta,
   SkillGroup,
 } from './types';
+
+/**
+ * Journey images live in /public/images/journey. They are ready-made SVGs from
+ * Microsoft's Fluent Emoji set (MIT licence — see public/images/journey/LICENSE).
+ * Swap any of them for your own files: photos, logos or other SVGs all work.
+ */
+const img = (name: string) => `images/journey/${name}.svg`;
 
 export const site: SiteMeta = {
   siteUrl: '',
@@ -59,7 +66,7 @@ export const education: JourneyStage[] = [
   {
     id: 'school',
     kind: 'education',
-    scene: 'school',
+    visual: { src: img('school'), alt: 'A school building', extras: [img('backpack'), img('pencil'), img('books')] },
     title: 'School',
     shortTitle: 'School',
     organization: '[School name]',
@@ -77,7 +84,7 @@ export const education: JourneyStage[] = [
   {
     id: 'university',
     kind: 'education',
-    scene: 'university',
+    visual: { src: img('graduation-cap'), alt: 'A graduation cap', extras: [img('scroll'), img('trophy')] },
     title: '[Degree — e.g. Bachelor of …]',
     shortTitle: 'University',
     organization: '[University name]',
@@ -97,7 +104,7 @@ export const education: JourneyStage[] = [
   {
     id: 'masters',
     kind: 'education',
-    scene: 'academic',
+    visual: { src: img('books'), alt: 'A stack of books', extras: [img('graduation-cap'), img('light-bulb'), img('memo')] },
     title: 'Master’s Student',
     shortTitle: 'Master’s Student',
     organization: '[University name] — [Program name]',
@@ -123,7 +130,7 @@ export const experience: JourneyStage[] = [
   {
     id: 'store-manager',
     kind: 'experience',
-    scene: 'store',
+    visual: { src: img('convenience-store'), alt: 'A retail store', extras: [img('shopping-bags'), img('receipt')] },
     title: 'Store Manager',
     organization: '[Company name]',
     location: '[City, Country]',
@@ -142,7 +149,7 @@ export const experience: JourneyStage[] = [
   {
     id: 'financial-advisor-trainee',
     kind: 'experience',
-    scene: 'finance',
+    visual: { src: img('bank'), alt: 'A bank building', extras: [img('coin'), img('money-bag')] },
     title: 'Financial Advisor Trainee',
     shortTitle: 'Financial Advisor Trainee',
     organization: '[Bank or firm name]',
@@ -160,7 +167,7 @@ export const experience: JourneyStage[] = [
   {
     id: 'retail-agent',
     kind: 'experience',
-    scene: 'telecom',
+    visual: { src: img('mobile-phone'), alt: 'A mobile phone', extras: [img('antenna-bars'), img('satellite-antenna')] },
     title: 'Retail Agent',
     organization: '[Telecom company name]',
     location: '[City, Country]',
@@ -178,7 +185,7 @@ export const experience: JourneyStage[] = [
   {
     id: 'digital-sales-agent',
     kind: 'experience',
-    scene: 'digital',
+    visual: { src: img('laptop'), alt: 'A laptop', extras: [img('mobile-phone-with-arrow'), img('credit-card')] },
     title: 'Digital Sales Agent',
     organization: '[Company name]',
     location: '[City, Country]',
@@ -196,7 +203,7 @@ export const experience: JourneyStage[] = [
   {
     id: 'treasury-specialist',
     kind: 'experience',
-    scene: 'treasury',
+    visual: { src: img('chart-increasing'), alt: 'A rising financial chart', extras: [img('coin'), img('bar-chart'), img('dollar-banknote')] },
     title: 'Treasury Specialist',
     organization: '[Company name]',
     location: '[City, Country]',
@@ -213,7 +220,7 @@ export const experience: JourneyStage[] = [
   {
     id: 'retail-team-leader',
     kind: 'experience',
-    scene: 'team',
+    visual: { src: img('busts-in-silhouette'), alt: 'A team of people', extras: [img('handshake'), img('star')] },
     title: 'Retail Team Leader',
     organization: '[Company name]',
     location: '[City, Country]',
@@ -232,7 +239,7 @@ export const experience: JourneyStage[] = [
   {
     id: 'eshop-team-leader',
     kind: 'experience',
-    scene: 'eshop',
+    visual: { src: img('shopping-cart'), alt: 'An online shopping cart', extras: [img('laptop'), img('credit-card')] },
     title: 'eShop Team Leader',
     organization: '[Company name]',
     location: '[City, Country]',
@@ -250,7 +257,11 @@ export const experience: JourneyStage[] = [
   {
     id: 'eshop-logistics-activation-lead',
     kind: 'experience',
-    scene: 'network',
+    visual: {
+      src: img('delivery-truck'),
+      alt: 'A delivery truck, linking online orders, fulfilment, delivery and activation',
+      extras: [img('shopping-cart'), img('package'), img('mobile-phone-with-arrow'), img('check-mark-button')],
+    },
     title: 'eShop, Logistics & Activation Team Leader',
     shortTitle: 'eShop, Logistics & Activation',
     organization: '[Company name]',
@@ -292,7 +303,7 @@ export const futureGoal: FutureGoal = {
 const aimStage: JourneyStage = {
   id: 'aim',
   kind: 'goal',
-  scene: 'horizon',
+  visual: { src: img('sunrise-over-mountains'), alt: 'The sun rising over mountains', extras: [img('compass'), img('glowing-star')] },
   title: 'Aim & Future Goal',
   organization: 'What comes next',
   location: '',
