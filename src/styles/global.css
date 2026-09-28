@@ -2,18 +2,18 @@
    Visual system
    ========================================================================== */
 :root {
-  --bg: #0b0e14;
-  --bg-raised: #11151e;
-  --ivory: #ede6d9;
-  --ivory-soft: rgba(237, 230, 217, 0.86);
-  --muted: #aaa396;
-  --line: rgba(237, 230, 217, 0.14);
-  --line-strong: rgba(237, 230, 217, 0.28);
-  --accent: #c9a45c;
-  --accent-strong: #dcbb78;
-  --accent-ink: #17130b;
-  --paper: #f7f3ea;
-  --ink: #1c1d21;
+  --bg: #0a1a33;
+  --bg-raised: #0f2446;
+  --ivory: #eef3fb;
+  --ivory-soft: rgba(222, 234, 252, 0.86);
+  --muted: #a8b8d2;
+  --line: rgba(222, 234, 252, 0.14);
+  --line-strong: rgba(222, 234, 252, 0.28);
+  --accent: #8cbcff;
+  --accent-strong: #bcd8ff;
+  --accent-ink: #07152b;
+  --paper: #f6f8fc;
+  --ink: #0e1a2e;
 
   --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
   --font-body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -39,8 +39,8 @@ html {
 body {
   margin: 0;
   background:
-    radial-gradient(1200px 800px at 85% -10%, rgba(201, 164, 92, 0.07), transparent 60%),
-    radial-gradient(900px 700px at -10% 30%, rgba(90, 110, 150, 0.08), transparent 60%),
+    radial-gradient(1200px 800px at 85% -10%, rgba(140, 188, 255, 0.07), transparent 60%),
+    radial-gradient(900px 700px at -10% 30%, rgba(40, 90, 190, 0.22), transparent 60%),
     var(--bg);
   background-attachment: fixed;
   color: var(--ivory);
@@ -99,7 +99,7 @@ ol {
 
 a {
   color: inherit;
-  text-decoration-color: rgba(201, 164, 92, 0.6);
+  text-decoration-color: rgba(140, 188, 255, 0.6);
   text-underline-offset: 0.2em;
 }
 
@@ -109,7 +109,7 @@ a {
 }
 
 ::selection {
-  background: rgba(201, 164, 92, 0.35);
+  background: rgba(140, 188, 255, 0.35);
   color: var(--ivory);
 }
 
@@ -136,8 +136,8 @@ a {
 
 /* Placeholders: visible until replaced (toggle in src/data/resume.ts). */
 .ph {
-  background: rgba(201, 164, 92, 0.12);
-  border-bottom: 1px dashed rgba(201, 164, 92, 0.8);
+  background: rgba(140, 188, 255, 0.12);
+  border-bottom: 1px dashed rgba(140, 188, 255, 0.8);
   border-radius: 2px;
   padding: 0 0.15em;
   -webkit-box-decoration-break: clone;
@@ -153,7 +153,7 @@ a {
   align-items: center;
   gap: 0.4em;
   padding: 0.1rem 0.6rem;
-  border: 1px solid rgba(201, 164, 92, 0.55);
+  border: 1px solid rgba(140, 188, 255, 0.55);
   border-radius: 999px;
   font-size: 0.7rem;
   font-weight: 600;
@@ -238,7 +238,7 @@ a {
   font-size: 0.9rem;
   color: var(--accent-strong);
   text-decoration: none;
-  border-bottom: 1px solid rgba(201, 164, 92, 0.45);
+  border-bottom: 1px solid rgba(140, 188, 255, 0.45);
   padding-bottom: 2px;
 }
 .text-link:hover {
@@ -272,7 +272,7 @@ a {
   justify-content: space-between;
   gap: 1rem;
   padding: 0 var(--gutter);
-  background: linear-gradient(to bottom, rgba(11, 14, 20, 0.94), rgba(11, 14, 20, 0.72) 70%, rgba(11, 14, 20, 0));
+  background: linear-gradient(to bottom, rgba(10, 26, 51, 0.94), rgba(10, 26, 51, 0.72) 70%, rgba(10, 26, 51, 0));
 }
 
 .brand {
@@ -360,7 +360,7 @@ a {
   transition: transform 0.2s var(--ease), background-color 0.2s;
 }
 .motion-toggle[aria-pressed='true'] .motion-toggle__track {
-  background: rgba(201, 164, 92, 0.2);
+  background: rgba(140, 188, 255, 0.2);
   border-color: var(--accent);
 }
 .motion-toggle[aria-pressed='true'] .motion-toggle__track::after {
@@ -595,7 +595,7 @@ a {
   position: absolute;
   inset: 8%;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(214, 178, 108, 0.2), rgba(214, 178, 108, 0.07) 45%, rgba(214, 178, 108, 0) 100%);
+  background: radial-gradient(closest-side, rgba(140, 188, 255, 0.2), rgba(140, 188, 255, 0.07) 45%, rgba(140, 188, 255, 0) 100%);
   pointer-events: none;
 }
 .visual__main {
@@ -606,7 +606,7 @@ a {
   height: 56%;
   object-fit: contain;
   transform-origin: 50% 55%;
-  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 0 26px rgba(120, 170, 255, 0.35));
 }
 .visual__extra {
   position: absolute;
@@ -616,7 +616,8 @@ a {
   height: calc(var(--s) * 100%);
   object-fit: contain;
   transform: translate(-50%, -50%);
-  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.4));
+  filter: drop-shadow(0 0 14px rgba(120, 170, 255, 0.3));
+  opacity: 0.9;
 }
 [data-perf='lite'] .visual__main,
 [data-perf='lite'] .visual__extra {
@@ -1057,7 +1058,7 @@ a {
       transform 0.3s var(--ease);
   }
   [data-engine='on'] .progress__dot.is-past::after {
-    background: rgba(201, 164, 92, 0.45);
+    background: rgba(140, 188, 255, 0.45);
     border-color: transparent;
   }
   [data-engine='on'] .progress__dot.is-active::after {
@@ -1233,7 +1234,7 @@ a {
 /* ------------------------------------------------------------------- Now */
 .now {
   border-block: 1px solid var(--line);
-  background: linear-gradient(90deg, rgba(201, 164, 92, 0.06), transparent 60%);
+  background: linear-gradient(90deg, rgba(140, 188, 255, 0.06), transparent 60%);
 }
 .now__inner {
   max-width: var(--max);
@@ -1258,15 +1259,15 @@ a {
   height: 9px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 0 rgba(201, 164, 92, 0.6);
+  box-shadow: 0 0 0 0 rgba(140, 188, 255, 0.6);
   animation: pulse 2.6s infinite;
 }
 @keyframes pulse {
   70% {
-    box-shadow: 0 0 0 10px rgba(201, 164, 92, 0);
+    box-shadow: 0 0 0 10px rgba(140, 188, 255, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(201, 164, 92, 0);
+    box-shadow: 0 0 0 0 rgba(140, 188, 255, 0);
   }
 }
 .now__roles li {
@@ -1322,7 +1323,7 @@ a {
   border: 1px solid var(--line);
   border-radius: 10px;
   background:
-    radial-gradient(80% 70% at 50% 60%, rgba(201, 164, 92, 0.08), transparent 70%),
+    radial-gradient(80% 70% at 50% 60%, rgba(140, 188, 255, 0.08), transparent 70%),
     var(--bg-raised);
   overflow: hidden;
   padding: 1.5rem;
@@ -1351,7 +1352,7 @@ a {
   font-size: clamp(3rem, 7vw, 5.5rem);
   line-height: 1;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(201, 164, 92, 0.6);
+  -webkit-text-stroke: 1px rgba(140, 188, 255, 0.6);
 }
 .project__context {
   font-size: 0.78rem;
@@ -1515,7 +1516,7 @@ a {
   width: min(1400px, 160vw);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(201, 164, 92, 0.34), rgba(201, 164, 92, 0.1) 45%, transparent 75%);
+  background: radial-gradient(closest-side, rgba(140, 188, 255, 0.34), rgba(140, 188, 255, 0.1) 45%, transparent 75%);
   transform: translateX(-50%) scale(calc(0.55 + var(--rise) * 0.45));
   opacity: calc(0.3 + var(--rise) * 0.7);
 }
@@ -1524,7 +1525,7 @@ a {
   width: min(460px, 70vw);
   height: auto;
   margin-bottom: -4%;
-  filter: drop-shadow(0 40px 60px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 0 40px rgba(120, 170, 255, 0.45));
   transform: translateY(calc((1 - var(--rise)) * 45%)) scale(calc(0.8 + var(--rise) * 0.2));
   opacity: calc(0.2 + var(--rise) * 0.8);
 }
@@ -1691,7 +1692,7 @@ a {
   padding: 0.8rem 0.9rem;
   border: 1px solid var(--line-strong);
   border-radius: 6px;
-  background: rgba(11, 14, 20, 0.6);
+  background: rgba(10, 26, 51, 0.6);
   color: var(--ivory);
   font: inherit;
   font-size: 1rem;
@@ -1764,7 +1765,7 @@ a {
 .resume__notice {
   margin-bottom: 1.5rem;
   padding: 0.9rem 1.1rem;
-  border: 1px solid rgba(201, 164, 92, 0.4);
+  border: 1px solid rgba(140, 188, 255, 0.4);
   border-radius: 8px;
   font-size: 0.9rem;
   color: var(--ivory-soft);
@@ -1777,16 +1778,16 @@ a {
   line-height: 1.55;
 }
 .resume__doc a {
-  color: #6b4f16;
+  color: #1f4f9a;
 }
 .resume__doc .ph {
-  background: rgba(201, 164, 92, 0.22);
-  border-bottom-color: #8a6a26;
+  background: rgba(140, 188, 255, 0.22);
+  border-bottom-color: #2b5fb0;
 }
 .resume__doc .badge {
   margin-left: 0.6rem;
-  color: #6b4f16;
-  border-color: #b08a45;
+  color: #1f4f9a;
+  border-color: #5b8ad6;
 }
 .resume__header {
   padding-bottom: 1.5rem;
@@ -1818,7 +1819,7 @@ a {
   margin-top: 0.35rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: #6b4f16;
+  color: #1f4f9a;
 }
 .resume__contact {
   display: flex;
@@ -1833,7 +1834,7 @@ a {
 .resume__doc h2 {
   margin-bottom: 0.9rem;
   padding-bottom: 0.35rem;
-  border-bottom: 1px solid rgba(28, 29, 33, 0.2);
+  border-bottom: 1px solid rgba(14, 26, 46, 0.2);
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.18em;
@@ -1859,11 +1860,11 @@ a {
 }
 .cv-entry__dates {
   font-size: 0.85rem;
-  color: #4a4b50;
+  color: #46546b;
 }
 .cv-entry__org {
   font-style: italic;
-  color: #4a4b50;
+  color: #46546b;
   margin-bottom: 0.35rem;
 }
 .cv-entry__list {
@@ -1876,7 +1877,7 @@ a {
 }
 .cv-entry__skills {
   font-size: 0.9rem;
-  color: #3a3b40;
+  color: #35435a;
 }
 .cv-skills {
   display: grid;

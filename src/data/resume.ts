@@ -28,8 +28,8 @@ import type {
 } from './types';
 
 /**
- * Journey images live in /public/images/journey. They are ready-made SVGs from
- * Microsoft's Fluent Emoji set (MIT licence — see public/images/journey/LICENSE).
+ * Journey images live in /public/images/journey. They are ready-made SVG icons
+ * from Phosphor Icons (MIT licence — see public/images/journey/LICENSE).
  * Swap any of them for your own files: photos, logos or other SVGs all work.
  */
 const img = (name: string) => `images/journey/${name}.svg`;
@@ -66,7 +66,7 @@ export const education: JourneyStage[] = [
   {
     id: 'school',
     kind: 'education',
-    visual: { src: img('school'), alt: 'A school building', extras: [img('backpack'), img('pencil'), img('books')] },
+    visual: { src: img('student'), alt: 'A student', extras: [img('backpack'), img('pencil-simple'), img('books')] },
     title: 'School',
     shortTitle: 'School',
     organization: '[School name]',
@@ -84,7 +84,7 @@ export const education: JourneyStage[] = [
   {
     id: 'university',
     kind: 'education',
-    visual: { src: img('graduation-cap'), alt: 'A graduation cap', extras: [img('scroll'), img('trophy')] },
+    visual: { src: img('graduation-cap'), alt: 'A graduation cap', extras: [img('certificate'), img('trophy')] },
     title: '[Degree — e.g. Bachelor of …]',
     shortTitle: 'University',
     organization: '[University name]',
@@ -104,7 +104,7 @@ export const education: JourneyStage[] = [
   {
     id: 'masters',
     kind: 'education',
-    visual: { src: img('books'), alt: 'A stack of books', extras: [img('graduation-cap'), img('light-bulb'), img('memo')] },
+    visual: { src: img('book-open-text'), alt: 'An open book', extras: [img('graduation-cap'), img('lightbulb'), img('notebook')] },
     title: 'Master’s Student',
     shortTitle: 'Master’s Student',
     organization: '[University name] — [Program name]',
@@ -130,7 +130,7 @@ export const experience: JourneyStage[] = [
   {
     id: 'store-manager',
     kind: 'experience',
-    visual: { src: img('convenience-store'), alt: 'A retail store', extras: [img('shopping-bags'), img('receipt')] },
+    visual: { src: img('storefront'), alt: 'A retail store', extras: [img('shopping-bag'), img('receipt')] },
     title: 'Store Manager',
     organization: '[Company name]',
     location: '[City, Country]',
@@ -149,7 +149,7 @@ export const experience: JourneyStage[] = [
   {
     id: 'financial-advisor-trainee',
     kind: 'experience',
-    visual: { src: img('bank'), alt: 'A bank building', extras: [img('coin'), img('money-bag')] },
+    visual: { src: img('bank'), alt: 'A bank building', extras: [img('coins'), img('piggy-bank')] },
     title: 'Financial Advisor Trainee',
     shortTitle: 'Financial Advisor Trainee',
     organization: '[Bank or firm name]',
@@ -167,7 +167,7 @@ export const experience: JourneyStage[] = [
   {
     id: 'retail-agent',
     kind: 'experience',
-    visual: { src: img('mobile-phone'), alt: 'A mobile phone', extras: [img('antenna-bars'), img('satellite-antenna')] },
+    visual: { src: img('device-mobile'), alt: 'A mobile phone', extras: [img('cell-signal-high'), img('sim-card')] },
     title: 'Retail Agent',
     organization: '[Telecom company name]',
     location: '[City, Country]',
@@ -185,7 +185,7 @@ export const experience: JourneyStage[] = [
   {
     id: 'digital-sales-agent',
     kind: 'experience',
-    visual: { src: img('laptop'), alt: 'A laptop', extras: [img('mobile-phone-with-arrow'), img('credit-card')] },
+    visual: { src: img('laptop'), alt: 'A laptop', extras: [img('cursor-click'), img('credit-card')] },
     title: 'Digital Sales Agent',
     organization: '[Company name]',
     location: '[City, Country]',
@@ -203,7 +203,7 @@ export const experience: JourneyStage[] = [
   {
     id: 'treasury-specialist',
     kind: 'experience',
-    visual: { src: img('chart-increasing'), alt: 'A rising financial chart', extras: [img('coin'), img('bar-chart'), img('dollar-banknote')] },
+    visual: { src: img('chart-line-up'), alt: 'A rising financial chart', extras: [img('vault'), img('chart-bar'), img('currency-circle-dollar')] },
     title: 'Treasury Specialist',
     organization: '[Company name]',
     location: '[City, Country]',
@@ -220,7 +220,7 @@ export const experience: JourneyStage[] = [
   {
     id: 'retail-team-leader',
     kind: 'experience',
-    visual: { src: img('busts-in-silhouette'), alt: 'A team of people', extras: [img('handshake'), img('star')] },
+    visual: { src: img('users-three'), alt: 'A team of people', extras: [img('handshake'), img('star')] },
     title: 'Retail Team Leader',
     organization: '[Company name]',
     location: '[City, Country]',
@@ -239,7 +239,7 @@ export const experience: JourneyStage[] = [
   {
     id: 'eshop-team-leader',
     kind: 'experience',
-    visual: { src: img('shopping-cart'), alt: 'An online shopping cart', extras: [img('laptop'), img('credit-card')] },
+    visual: { src: img('shopping-cart'), alt: 'An online shopping cart', extras: [img('globe-hemisphere-west'), img('credit-card')] },
     title: 'eShop Team Leader',
     organization: '[Company name]',
     location: '[City, Country]',
@@ -258,9 +258,9 @@ export const experience: JourneyStage[] = [
     id: 'eshop-logistics-activation-lead',
     kind: 'experience',
     visual: {
-      src: img('delivery-truck'),
+      src: img('truck'),
       alt: 'A delivery truck, linking online orders, fulfilment, delivery and activation',
-      extras: [img('shopping-cart'), img('package'), img('mobile-phone-with-arrow'), img('check-mark-button')],
+      extras: [img('shopping-cart'), img('package'), img('device-mobile'), img('check-circle')],
     },
     title: 'eShop, Logistics & Activation Team Leader',
     shortTitle: 'eShop, Logistics & Activation',
@@ -303,7 +303,7 @@ export const futureGoal: FutureGoal = {
 const aimStage: JourneyStage = {
   id: 'aim',
   kind: 'goal',
-  visual: { src: img('sunrise-over-mountains'), alt: 'The sun rising over mountains', extras: [img('compass'), img('glowing-star')] },
+  visual: { src: img('sun-horizon'), alt: 'The sun rising over the horizon', extras: [img('compass'), img('sparkle')] },
   title: 'Aim & Future Goal',
   organization: 'What comes next',
   location: '',

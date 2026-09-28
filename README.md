@@ -3,16 +3,20 @@
 A scroll-driven personal CV website. As visitors scroll, the letters of your name gather into a
 school, and each chapter's image hands over to the next in the style of Apple's product pages: the
 current image zooms towards the viewer, blurs and dissolves while the next rises from the depth
-and sharpens into focus, with smaller images drifting around it for depth. School → graduation →
-store → bank → phone → laptop → chart → team → shopping cart → delivery → books → sunrise.
+and sharpens into focus, with smaller images drifting around it for depth. Student → graduation cap →
+storefront → bank → phone → laptop → chart → team → shopping cart → truck → open book → sunrise.
 It is followed by selected projects, a skills summary, your aim and future goal, and contact details.
 
 Built with **React + TypeScript + Vite**. No animation library: the page scrolls natively, the stage is
 `position: sticky`, and a small engine drives transform, opacity and blur from the scroll position.
 
-The journey images are ready-made SVGs from Microsoft's
-[Fluent Emoji](https://github.com/microsoft/fluentui-emoji) set (MIT licence, see
-`public/images/journey/LICENSE`). Replace any of them with your own images.
+The journey images are ready-made line icons from [Phosphor Icons](https://phosphoricons.com)
+(MIT licence, see `public/images/journey/LICENSE`): the fine "thin" outline with Phosphor's
+duotone fill, in a white-to-ice-blue gradient that suits the navy theme. Replace any of them with
+your own images.
+
+Colours live as tokens at the top of `src/styles/global.css` (`--bg`, `--accent`, …) — change them
+there to re-theme the whole site.
 
 ---
 
@@ -54,7 +58,7 @@ Anything in `[square brackets]` is a placeholder — e.g. `[Company name]`, `[Ad
 `[Add a measurable result]`. Replace the brackets and their contents with your own words.
 
 While `site.highlightPlaceholders` is `true`, every remaining placeholder is shown on the page with a
-dashed gold underline so you can spot any you missed. Set it to `false` before launch (or simply
+dashed blue underline so you can spot any you missed. Set it to `false` before launch (or simply
 replace all of them). Tip: search the file for `[` to find them all.
 
 Keep each stage to **two to four achievements** and don’t nest brackets inside brackets. The tests
@@ -67,9 +71,9 @@ Keep each stage to **two to four achievements** and don’t nest brackets inside
   id: 'store-manager',          // unique, URL-safe
   kind: 'experience',           // 'education' | 'experience' | 'goal'
   visual: {                     // the stage's image (see "Images" below)
-    src: 'images/journey/convenience-store.svg',
+    src: 'images/journey/storefront.svg',
     alt: 'A retail store',
-    extras: ['images/journey/shopping-bags.svg'], // optional, up to 4 floating images
+    extras: ['images/journey/shopping-bag.svg'], // optional, up to 4 floating images
   },
   title: 'Store Manager',       // role or qualification
   shortTitle: 'Store Manager',  // optional: shorter label for the progress indicator
@@ -108,10 +112,11 @@ The progress indicator, résumé view, skills strips and scroll length all adjus
 
 ## Images, photo and logos
 
-**Journey images.** `public/images/journey/` holds the SVGs used by the journey, the projects and
-the final scene. Any square-ish image with a transparent background works best (SVG or PNG).
-More ready-made images in the same style: <https://github.com/microsoft/fluentui-emoji>
-(use the `Color` SVGs) or <https://icon-sets.iconify.design/fluent-emoji/>.
+**Journey images.** `public/images/journey/` holds the SVG icons used by the journey, the projects
+and the final scene. Any square-ish image with a transparent background works (SVG or PNG).
+More icons in the same style: <https://phosphoricons.com> (download the *Thin* or *Duotone* SVG;
+to match the gradient colouring, copy the `<defs>` block and `fill="url(#g)"` from one of the
+existing files).
 
 **Other images:**
 
@@ -209,7 +214,7 @@ src/
     appleTransition.ts        the image hand-over curve (zoom, blur, fade, depth)
     timeline.ts               scroll position → chapter maths
   styles/global.css           visual system and layouts
-public/images/journey/        journey SVGs (Fluent Emoji, MIT)
+public/images/journey/        journey SVG icons (Phosphor Icons, MIT)
 scripts/prerender.mjs         injects prerendered HTML + SEO tags at build time
 tests/                        content, timeline and transition tests
 ```
