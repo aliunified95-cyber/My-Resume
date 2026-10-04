@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { futureGoal, stageById } from '../data/resume';
 import type { MotionMode } from '../lib/motion';
 import { useSectionProgress } from '../lib/useSectionProgress';
-import { ContactButton, CvButton } from './Actions';
+import { CvButton } from './Actions';
 import { Text } from './Text';
 
 /**
@@ -52,7 +52,6 @@ export function AimAndGoal({ mode }: { mode: MotionMode }) {
           <Text>{futureGoal.closingLine}</Text>
         </p>
         <div className="aim__actions">
-          <ContactButton variant="primary" />
           <CvButton variant="ghost" />
         </div>
       </div>

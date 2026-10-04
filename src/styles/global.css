@@ -2008,6 +2008,10 @@ a {
 .hero { background: radial-gradient(ellipse at 80% 45%, #294a38 0, transparent 60%); }
 .hero__inner { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 0.8fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; }
 .hero__copy { min-width: 0; }
+.hero__contact { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin-top: 0.6rem; }
+.hero__contact a { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; font-size: 0.85rem; text-decoration: none; color: var(--accent); }
+.hero__contact a:hover { text-decoration: underline; text-underline-offset: 0.25em; }
+.hero__contact svg { flex-shrink: 0; }
 .hero__eyebrow { color: var(--accent); font-size: 0.68rem; letter-spacing: 0.15em; }
 .hero__name { font-size: clamp(3.8rem, 7.5vw, 7rem); line-height: 1.02; margin: 1.5rem 0; }
 .hero__title { max-width: 45ch; font-size: 0.72rem; line-height: 1.7; letter-spacing: 0.1em; }

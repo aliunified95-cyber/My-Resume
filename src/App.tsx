@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { AccessibleResumeView } from './components/AccessibleResumeView';
 import { AimAndGoal } from './components/AimAndGoal';
-import { ContactSection, SiteFooter } from './components/ContactSection';
+import { SiteFooter } from './components/ContactSection';
 import { CurrentFocus } from './components/CurrentFocus';
 import { JourneyScene } from './components/JourneyScene';
 import { ProjectShowcase } from './components/ProjectShowcase';
@@ -64,10 +65,10 @@ export function App() {
           <ProjectShowcase />
           <SkillsSummary />
           <AimAndGoal mode={mode} />
-          <ContactSection />
         </main>
       )}
       <SiteFooter />
+      <Analytics />
     </>
   );
 }

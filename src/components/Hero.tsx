@@ -1,6 +1,7 @@
 import { memo } from 'react';
-import { journey, personalDetails } from '../data/resume';
-import { CvButton } from './Actions';
+import { contactLinks, journey, personalDetails } from '../data/resume';
+import { CvButton, emailHref, linkedInHref } from './Actions';
+import { ArrowUpRightIcon, LinkedInIcon, MailIcon } from './Icons';
 import { isPlaceholder, Text } from './Text';
 
 /**
@@ -34,6 +35,15 @@ export const Hero = memo(function Hero({ onBegin }: { onBegin?: (event: React.Mo
           <p className="hero__title" data-hero-fade>
             <Text>{currentTitle}</Text>
           </p>
+          <div className="hero__contact" data-hero-fade>
+            {linkedInHref() && (
+              <a href={linkedInHref()} target="_blank" rel="noopener noreferrer">
+                <LinkedInIcon /> LinkedIn <ArrowUpRightIcon />
+                <span className="visually-hidden"> (opens in a new tab)</span>
+              </a>
+            )}
+            {emailHref() && <a href={emailHref()}><MailIcon /> {contactLinks.email}</a>}
+          </div>
           <p className="hero__statement" data-hero-fade>
             I connect digital sales, people and operations to build better customer journeys.
           </p>

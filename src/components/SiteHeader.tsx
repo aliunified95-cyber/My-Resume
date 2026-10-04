@@ -16,7 +16,6 @@ const links = [
   { href: '#projects', label: 'Projects' },
   { href: '#skills', label: 'Skills' },
   { href: '#aim', label: 'Aim' },
-  { href: '#contact', label: 'Contact' },
 ];
 
 export function SiteHeader({ view, mode, onToggleMotion }: Props) {
@@ -90,7 +89,7 @@ export function SiteHeader({ view, mode, onToggleMotion }: Props) {
       {view === 'story' && (
         <nav className="mobile-actions" aria-label="Quick actions">
           <a href="#projects">My work <span aria-hidden="true">↗</span></a>
-          <a href="#contact">Let’s talk <span aria-hidden="true">↗</span></a>
+          <a href="#resume">Résumé <span aria-hidden="true">↗</span></a>
           <CvButton className="mobile-actions__cv" />
         </nav>
       )}
