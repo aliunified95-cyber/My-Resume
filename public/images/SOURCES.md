@@ -11,6 +11,7 @@ Downloaded on 4 October 2026. Files are served locally, with no third-party imag
 - `brands/zain-logo.svg`: [Zain Bahrain logo via CompaniesLogo](https://companieslogo.com/zain-bahrain/logo/)
 - `photos/zain-hq.png`: [Zain Media Centre](https://zain.com/en/media-center/) — [Bahrain headquarters photograph](https://d30ezutk4plts9.cloudfront.net/media/original_images/zainbahrain22.png)
 - `brands/bahrain-credit-logo.png`: [Bahrain Credit](https://www.bahraincredit.com.bh/Administrator/MediaHandler/ImageHandler/images/Logo.png)
+- `photos/zain-branch.png`: Zain Bahrain retail branch photograph supplied by the user.
 - `ali-isa-mohsen.png`: portrait extracted from the user-supplied `Files/Ali_CV_Photo.pdf`.
 
 ## Illustrative photography

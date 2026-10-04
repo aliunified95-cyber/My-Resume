@@ -19,6 +19,7 @@ export const photographs = {
   university: photo('uob-campus.jpg', 'University of Bahrain campus with Bahraini flags', 2560, 1920),
   arden: photo('arden-hq.jpg', 'Arden University headquarters in Coventry', 1200, 800),
   zain: photo('zain-hq.png', 'Zain Bahrain headquarters', 500, 289),
+  zainBranch: photo('zain-branch.png', 'Zain Bahrain retail branch with customer service counters and storefront signage', 773, 418),
   commerce: photo('commerce.jpg', 'Illustrative photograph of an analytics dashboard on a laptop', 1000, 712),
   phone: photo('phone.jpg', 'Illustrative photograph of a smartphone beside a laptop', 1000, 1000),
   team: photo('team.jpg', 'Illustrative photograph of a team collaborating around laptops', 1000, 1499),
@@ -100,7 +101,7 @@ export const experience: JourneyStage[] = [
   },
   {
     id: 'retail-agent', kind: 'experience',
-    visual: { src: brand('zain-logo.svg'), alt: 'Zain logo', kind: 'logo', backdrop: photographs.zain, caption: 'Zain Bahrain · Headquarters', extras: [img('device-mobile'), img('sim-card')] },
+    visual: { src: brand('zain-logo.svg'), alt: 'Zain logo', kind: 'logo', backdrop: photographs.zainBranch, caption: 'Zain Bahrain · Retail branch', extras: [img('device-mobile'), img('sim-card')] },
     title: 'Retail Sales Representative', shortTitle: 'Retail Sales', organization: 'Zain Bahrain', location: 'Bahrain', start: 'Feb 2019', end: 'Mar 2020',
     description: 'Delivered frontline telecommunications sales and service while maintaining monthly sales performance and daily branch operations.',
     achievements: ['Consistently achieved monthly sales targets throughout the role.', 'Managed product and service sales, customer enquiries, upselling, activations and complaint resolution.', 'Handled cash transactions, stock activities and daily retail operational requirements.'],
@@ -124,7 +125,7 @@ export const experience: JourneyStage[] = [
   },
   {
     id: 'retail-team-leader', kind: 'experience',
-    visual: { src: brand('zain-logo.svg'), alt: 'Zain logo', kind: 'logo', backdrop: photographs.team, caption: 'Team leadership · Illustrative photography', extras: [img('users-three'), img('star')] },
+    visual: { src: brand('zain-logo.svg'), alt: 'Zain logo', kind: 'logo', backdrop: photographs.zainBranch, caption: 'Zain Bahrain · Retail team leadership', extras: [img('users-three'), img('star')] },
     title: 'Retail Team Leader', organization: 'Zain Bahrain', location: 'Bahrain', start: 'Jan 2022', end: 'Feb 2022',
     description: 'Led a 7-member retail team, managing branch operations, sales targets, customer experience and daily operational performance.',
     achievements: ['Coached employees against sales and service KPIs to support performance improvement and target achievement.', 'Managed stock, visual merchandising, operational reporting and customer issue resolution.', 'Trained and onboarded new agents across products, systems, sales processes and customer-service standards.'],

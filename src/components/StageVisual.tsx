@@ -31,14 +31,14 @@ export const StageVisual = memo(
               width={visual.backdrop.width} height={visual.backdrop.height} loading={eager ? 'eager' : 'lazy'} decoding="async" />
           )}
           <img
-          className="visual__image"
-          src={visual.src}
-          alt={decorative ? '' : visual.alt}
-          width={512}
-          height={512}
-          loading={eager ? 'eager' : 'lazy'}
-          decoding="async"
-          draggable={false}
+            className="visual__image"
+            src={visual.src}
+            alt={decorative ? '' : visual.alt}
+            width={512}
+            height={512}
+            loading={eager ? 'eager' : 'lazy'}
+            decoding="async"
+            draggable={false}
           />
           {visual.caption && <span className="visual__caption">{visual.caption}</span>}
         </div>

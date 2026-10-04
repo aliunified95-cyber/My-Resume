@@ -23,6 +23,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { AccessibleResumeView } from '../src/components/AccessibleResumeView';
 import { ProjectShowcase } from '../src/components/ProjectShowcase';
 import { SkillsSummary } from '../src/components/SkillsSummary';
+import { StageVisual } from '../src/components/StageVisual';
 
 const publicDir = path.resolve(__dirname, '../public');
 
@@ -100,6 +101,19 @@ describe('résumé content', () => {
     expect(resume).toContain('automated credit-control eligibility checks');
     expect(resume).toContain('employee onboarding, training, workload allocation');
     expect(resume.indexOf('Digital Sales, Logistics &amp; Activation Team Leader', resume.indexOf('id="cv-experience"'))).toBeLessThan(resume.indexOf('Store Manager'));
+  });
+
+  it('renders organisation logos over photos and keeps animated duplicates decorative', () => {
+    const visual = stageById('university')!.visual;
+    const visible = renderToStaticMarkup(createElement(StageVisual, { visual }));
+    expect(visible).toContain('images/brands/uob-logo.png');
+    expect(visible).toContain('images/photos/uob-campus.jpg');
+    expect(visible).toContain('University of Bahrain logo');
+    expect(visible).toContain('visual__main');
+    const decorative = renderToStaticMarkup(createElement(StageVisual, { visual, decorative: true }));
+    expect(decorative).toContain('aria-hidden="true"');
+    expect(decorative).not.toContain('alt="University of Bahrain logo"');
+    expect(projects.every((p) => p.image?.alt.startsWith('Illustrative'))).toBe(true);
   });
 
   it('gives every stage two to four achievements and at least one skill', () => {

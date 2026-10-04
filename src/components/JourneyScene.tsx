@@ -45,6 +45,8 @@ export function JourneyScene({ mode, onEngineError }: Props) {
   const layerRefs = useRef<(HTMLElement | null)[]>([]);
   const metrics = useRef({ top: 0, scrollable: 1 });
   const [active, setActive] = useState(0);
+  const focusTimer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(focusTimer.current), [mode]);
   const panelSetters = useMemo(
     () =>
       stages.map((_, i) => (el: HTMLElement | null) => {
@@ -269,6 +271,7 @@ export function JourneyScene({ mode, onEngineError }: Props) {
 
   const jumpTo = useCallback(
     (index: number) => {
+      window.clearTimeout(focusTimer.current);
       const smooth = !prefersReducedMotion();
       const panel = panelRefs.current[index - 1];
       if (mode !== 'cinematic') {
@@ -280,7 +283,7 @@ export function JourneyScene({ mode, onEngineError }: Props) {
       const y = top + qToScroll(jumpQ(index), sceneCount) * scrollable;
       window.scrollTo({ top: y, behavior: smooth ? 'smooth' : 'auto' });
       // Move focus to the chapter once it has faded in, for keyboard users.
-      window.setTimeout(() => panel?.focus({ preventScroll: true }), smooth ? 900 : 50);
+      focusTimer.current = window.setTimeout(() => panel?.focus({ preventScroll: true }), smooth ? 900 : 50);
     },
     [mode, sceneCount],
   );
