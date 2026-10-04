@@ -18,18 +18,20 @@ interface Props {
   className?: string;
 }
 
-/**
- * A stage's image: one main SVG with up to four smaller ones floating around
- * it. The journey engine animates the pieces independently for depth.
- */
+/** Photography and an organisation logo, with supporting decorative illustrations. */
 export const StageVisual = memo(
   forwardRef<HTMLElement, Props>(function StageVisual({ visual, decorative = false, eager = false, className = '' }, ref) {
     const extras = (visual.extras ?? []).slice(0, EXTRA_SLOTS.length);
     return (
-      <figure ref={ref} className={`visual ${className}`.trim()} aria-hidden={decorative || undefined}>
+      <figure ref={ref} className={`visual visual--${visual.kind ?? 'icon'} ${className}`.trim()} aria-hidden={decorative || undefined}>
         <span className="visual__glow" aria-hidden="true" />
-        <img
-          className="visual__main"
+        <div className="visual__main">
+          {visual.backdrop && (
+            <img className="visual__backdrop" src={visual.backdrop.src} alt={decorative ? '' : visual.backdrop.alt}
+              width={visual.backdrop.width} height={visual.backdrop.height} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+          )}
+          <img
+          className="visual__image"
           src={visual.src}
           alt={decorative ? '' : visual.alt}
           width={512}
@@ -37,7 +39,9 @@ export const StageVisual = memo(
           loading={eager ? 'eager' : 'lazy'}
           decoding="async"
           draggable={false}
-        />
+          />
+          {visual.caption && <span className="visual__caption">{visual.caption}</span>}
+        </div>
         {extras.map((src, i) => {
           const slot = EXTRA_SLOTS[i];
           return (

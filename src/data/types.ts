@@ -14,6 +14,10 @@ export interface StageVisual {
   alt: string;
   /** Optional smaller images that float around the main one (up to four). Decorative. */
   extras?: string[];
+  /** Logos sit over contextual photography; captions distinguish illustrative images. */
+  backdrop?: Media;
+  caption?: string;
+  kind?: 'logo' | 'photo' | 'icon';
 }
 
 export interface Media {
@@ -71,6 +75,8 @@ export interface JourneyStage {
   description: string;
   /** Two to four items. */
   achievements: string[];
+  /** Optional complete responsibilities for the printable view; the journey uses concise highlights. */
+  details?: string[];
   skills: string[];
   /** Optional measurable results, shown as highlighted figures. */
   results?: { value: string; label: string }[];

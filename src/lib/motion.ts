@@ -14,16 +14,23 @@ export type MotionMode = 'cinematic' | 'static';
 
 const STORAGE_KEY = 'motion-preference';
 const EVENT = 'motionmodechange';
+// Native scrolling keeps every achievement readable on phones and short landscape screens.
+const COMPACT_VIEW = '(max-width: 820px), (max-height: 600px)';
 
 function getSnapshot(): MotionMode {
-  return document.documentElement.dataset.motion === 'cinematic' ? 'cinematic' : 'static';
+  return document.documentElement.dataset.motion === 'cinematic' && !window.matchMedia(COMPACT_VIEW).matches ? 'cinematic' : 'static';
 }
 // Prerendered HTML is always the static journey; hydration starts from it.
 const getServerSnapshot = (): MotionMode => 'static';
 
 function subscribe(callback: () => void) {
+  const compact = window.matchMedia(COMPACT_VIEW);
+  compact.addEventListener('change', callback);
   window.addEventListener(EVENT, callback);
-  return () => window.removeEventListener(EVENT, callback);
+  return () => {
+    compact.removeEventListener('change', callback);
+    window.removeEventListener(EVENT, callback);
+  };
 }
 
 function writeMotionMode(mode: MotionMode, persist: boolean) {

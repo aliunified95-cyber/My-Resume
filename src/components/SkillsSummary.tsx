@@ -1,4 +1,4 @@
-import { journey, skillGroups } from '../data/resume';
+import { certifications, journey, languages, skillGroups, technology } from '../data/resume';
 import { Text } from './Text';
 
 /**
@@ -13,9 +13,9 @@ export function SkillsSummary() {
     <section id="skills" className="section skills-summary" aria-labelledby="skills-heading">
       <header className="section__head">
         <p className="eyebrow">Leadership &amp; skills</p>
-        <h2 id="skills-heading" className="section__title">What the journey built</h2>
+        <h2 id="skills-heading" className="section__title">Expertise, technology &amp; development</h2>
         <p className="section__lede">
-          No self-scored bars. Each capability is traced back to the roles where it was developed and put to work.
+          Commercial, digital and operational capabilities, connected to the roles where I have applied them.
         </p>
       </header>
       <div className="skills-summary__legend" aria-hidden="true">
@@ -24,7 +24,7 @@ export function SkillsSummary() {
             <span key={s.id} className={`journey-strip__mark${s.id === stages[2]?.id ? ' is-on' : ''}`} />
           ))}
         </span>
-        <span>Each mark is one chapter, from school to today. Gold marks show where the skills were built.</span>
+        <span>Each mark is one chapter, from university to today. Gold marks show where the skills were built.</span>
       </div>
       <ul className="skill-groups">
         {skillGroups.map((group) => {
@@ -55,6 +55,38 @@ export function SkillsSummary() {
           );
         })}
       </ul>
+      <header className="section__head">
+        <h3 className="section__title">Technology &amp; analytics</h3>
+      </header>
+      <ul className="skill-groups">
+        {technology.map((group) => (
+          <li key={group.id} className="skill-group">
+            <h4 className="skill-group__title">{group.title}</h4>
+            <ul className="skill-group__skills">
+              {group.skills.map((skill) => <li key={skill}>{skill}</li>)}
+            </ul>
+          </li>
+        ))}
+      </ul>
+      <header className="section__head">
+        <h3 className="section__title">Certifications &amp; professional development</h3>
+      </header>
+      <ul className="skill-groups">
+        {certifications.map((item) => (
+          <li key={item.name} className="skill-group">
+            <h4 className="skill-group__title">{item.name}</h4>
+            {item.issuer && <p>{item.issuer}</p>}
+          </li>
+        ))}
+      </ul>
+      <header className="section__head">
+        <h3 className="section__title">Languages</h3>
+      </header>
+      <dl className="cv-skills">
+        {languages.map((item) => (
+          <div key={item.name}><dt>{item.name}</dt><dd>{item.proficiency}</dd></div>
+        ))}
+      </dl>
     </section>
   );
 }

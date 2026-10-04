@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
-import { contactLinks, education, experience, futureGoal, personalDetails, projects, skillGroups } from '../data/resume';
+import { businessImpact, certifications, contactLinks, education, experience, futureGoal, languages, personalDetails, projects, skillGroups, technology } from '../data/resume';
 import type { JourneyStage } from '../data/types';
 import { CvButton, emailHref, linkedInHref, phoneHref } from './Actions';
 import { ArrowIcon, PrintIcon } from './Icons';
 import { Text } from './Text';
 
 function Entry({ stage }: { stage: JourneyStage }) {
+  const details = stage.details ?? stage.achievements;
   return (
     <article className="cv-entry">
       <header className="cv-entry__head">
@@ -18,14 +19,14 @@ function Entry({ stage }: { stage: JourneyStage }) {
         </p>
       </header>
       <p className="cv-entry__org">
-        <Text>{stage.organization}</Text> · <Text>{stage.location}</Text>
+        <Text>{stage.organization}</Text>{stage.location && <> · <Text>{stage.location}</Text></>}
       </p>
       <p>
         <Text>{stage.description}</Text>
       </p>
-      {stage.achievements.length > 0 && (
+      {details.length > 0 && (
         <ul className="cv-entry__list">
-          {stage.achievements.map((a, i) => (
+          {details.map((a, i) => (
             <li key={i}><Text>{a}</Text></li>
           ))}
         </ul>
@@ -118,6 +119,15 @@ export function AccessibleResumeView() {
           <p><Text>{personalDetails.summary}</Text></p>
         </section>
 
+        <section aria-labelledby="cv-impact">
+          <h2 id="cv-impact">Selected business impact</h2>
+          <ul className="cv-entry__list">
+            {businessImpact.map((item) => (
+              <li key={item.label}><strong>{item.value} — {item.label}.</strong> {item.detail}</li>
+            ))}
+          </ul>
+        </section>
+
         <section aria-labelledby="cv-experience">
           <h2 id="cv-experience">Experience</h2>
           {jobs.map((s) => <Entry key={s.id} stage={s} />)}
@@ -129,7 +139,7 @@ export function AccessibleResumeView() {
         </section>
 
         <section aria-labelledby="cv-projects">
-          <h2 id="cv-projects">Selected projects</h2>
+          <h2 id="cv-projects">Digital transformation &amp; commercial projects</h2>
           {projects.map((p) => (
             <article className="cv-entry" key={p.id}>
               <header className="cv-entry__head">
@@ -154,6 +164,33 @@ export function AccessibleResumeView() {
                 <dt>{g.title}</dt>
                 <dd><Text>{g.skills.join(', ')}</Text></dd>
               </div>
+            ))}
+          </dl>
+        </section>
+
+        <section aria-labelledby="cv-technology">
+          <h2 id="cv-technology">Technology &amp; analytics</h2>
+          <dl className="cv-skills">
+            {technology.map((group) => (
+              <div key={group.id}><dt>{group.title}</dt><dd>{group.skills.join(', ')}</dd></div>
+            ))}
+          </dl>
+        </section>
+
+        <section aria-labelledby="cv-certifications">
+          <h2 id="cv-certifications">Certifications &amp; professional development</h2>
+          <ul className="cv-entry__list">
+            {certifications.map((item) => (
+              <li key={item.name}>{item.name}{item.issuer && ` — ${item.issuer}`}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section aria-labelledby="cv-languages">
+          <h2 id="cv-languages">Languages</h2>
+          <dl className="cv-skills">
+            {languages.map((item) => (
+              <div key={item.name}><dt>{item.name}</dt><dd>{item.proficiency}</dd></div>
             ))}
           </dl>
         </section>

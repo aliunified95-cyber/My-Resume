@@ -1,4 +1,4 @@
-import { projects, stageById } from '../data/resume';
+import { businessImpact, projects, stageById } from '../data/resume';
 import { ArrowUpRightIcon } from './Icons';
 import { StageVisual } from './StageVisual';
 import { isPlaceholder, Text } from './Text';
@@ -7,13 +7,31 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 export function ProjectShowcase() {
   return (
+    <>
+    <section id="impact" className="section impact" aria-labelledby="impact-heading">
+      <header className="section__head">
+        <p className="eyebrow">Business impact</p>
+        <h2 id="impact-heading" className="section__title">What I have delivered</h2>
+        <p className="section__lede">Selected outcomes across digital sales, transformation and retail operations.</p>
+      </header>
+      <ul className="impact__grid">
+        {businessImpact.map((item) => (
+          <li key={item.label} className="impact__item">
+            <p className="impact__value">{item.value}</p>
+            <h3>{item.label}</h3>
+            <p>{item.detail}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
     <section id="projects" className="section projects" aria-labelledby="projects-heading">
       <header className="section__head">
         <p className="eyebrow">Selected work</p>
-        <h2 id="projects-heading" className="section__title">Selected projects</h2>
+        <h2 id="projects-heading" className="section__title">Making better<br />journeys happen.</h2>
         <p className="section__lede">
-          A closer look at a few initiatives — the problem, what I did, and what changed.
+          Eight areas of work across customer journeys, automation, fulfilment and product launches — my contribution and the outcomes.
         </p>
+        <p className="image-note">Photography illustrates each area of work.</p>
       </header>
       <ol className="projects__list">
         {projects.map((project, i) => {
@@ -45,6 +63,9 @@ export function ProjectShowcase() {
                   <h3 className="project__title" id={`${project.id}-title`}>
                     <Text>{project.title}</Text>
                   </h3>
+                  <p className="project__outcome"><span className="eyebrow">The outcome</span><Text>{project.result}</Text></p>
+                  <details className="project__details">
+                    <summary>Explore the project <span aria-hidden="true">+</span></summary>
                   <dl className="project__facts">
                     <div>
                       <dt>Challenge</dt>
@@ -70,11 +91,8 @@ export function ProjectShowcase() {
                         </ul>
                       </dd>
                     </div>
-                    <div className="project__result">
-                      <dt>Result</dt>
-                      <dd><Text>{project.result}</Text></dd>
-                    </div>
                   </dl>
+                  </details>
                   {project.caseStudyUrl && !isPlaceholder(project.caseStudyUrl) && (
                     <a className="text-link" href={project.caseStudyUrl} target="_blank" rel="noopener noreferrer">
                       Read the case study <ArrowUpRightIcon />
@@ -88,5 +106,6 @@ export function ProjectShowcase() {
         })}
       </ol>
     </section>
+    </>
   );
 }

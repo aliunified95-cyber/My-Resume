@@ -315,7 +315,7 @@ export function JourneyScene({ mode, onEngineError }: Props) {
         <div className="story__panels">
           <h2 id="journey-heading" className="story__heading">
             <span className="eyebrow">Career journey</span>
-            <span className="story__heading-text">From first classroom to what comes next</span>
+            <span className="story__heading-text">From finance studies to digital operations leadership</span>
           </h2>
           {stages.map((stage, i) => (
             <TransformationStage

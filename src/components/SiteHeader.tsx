@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { personalDetails } from '../data/resume';
 import type { MotionMode } from '../lib/motion';
 import { CvButton } from './Actions';
@@ -11,6 +11,7 @@ interface Props {
 }
 
 const links = [
+  { href: '#impact', label: 'Impact' },
   { href: '#journey', label: 'Journey' },
   { href: '#projects', label: 'Projects' },
   { href: '#skills', label: 'Skills' },
@@ -20,10 +21,16 @@ const links = [
 
 export function SiteHeader({ view, mode, onToggleMotion }: Props) {
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
@@ -42,6 +49,7 @@ export function SiteHeader({ view, mode, onToggleMotion }: Props) {
       </a>
 
       <button
+        ref={toggleRef}
         type="button"
         className="menu-toggle"
         aria-expanded={open}
@@ -79,6 +87,13 @@ export function SiteHeader({ view, mode, onToggleMotion }: Props) {
           <CvButton variant="primary" className="btn--small" />
         </div>
       </div>
+      {view === 'story' && (
+        <nav className="mobile-actions" aria-label="Quick actions">
+          <a href="#projects">My work <span aria-hidden="true">↗</span></a>
+          <a href="#contact">Let’s talk <span aria-hidden="true">↗</span></a>
+          <CvButton className="mobile-actions__cv" />
+        </nav>
+      )}
     </header>
   );
 }

@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { journey, personalDetails } from '../data/resume';
-import { ContactButton, CvButton } from './Actions';
+import { CvButton } from './Actions';
 import { isPlaceholder, Text } from './Text';
 
 /**
@@ -13,8 +13,9 @@ export const Hero = memo(function Hero({ onBegin }: { onBegin?: (event: React.Mo
   return (
     <div className="hero" id="top">
       <div className="hero__inner">
+        <div className="hero__copy">
         <p className="hero__eyebrow" data-hero-fade>
-          <span>Curriculum Vitae</span>
+          <span>Digital commerce. Real impact.</span>
           <span className="hero__rule" aria-hidden="true" />
           <Text>{location}</Text>
         </p>
@@ -34,12 +35,28 @@ export const Hero = memo(function Hero({ onBegin }: { onBegin?: (event: React.Mo
           <Text>{currentTitle}</Text>
         </p>
         <p className="hero__statement" data-hero-fade>
-          <Text>{positioningStatement}</Text>
+          I connect digital sales, people and operations to build better customer journeys.
         </p>
+        <p className="visually-hidden">{positioningStatement}</p>
         <div className="hero__actions" data-hero-fade>
-          <CvButton />
-          <ContactButton />
+          <a className="btn btn--primary" href="#projects">Explore my work <span aria-hidden="true">↗</span></a>
+          <CvButton variant="ghost" />
         </div>
+        <dl className="hero__metrics" data-hero-fade>
+          <div><dt>Digital order growth</dt><dd>30%+</dd></div>
+          <div><dt>Initiatives delivered</dt><dd>40+</dd></div>
+          <div><dt>People led today</dt><dd>19</dd></div>
+        </dl>
+        </div>
+        {personalDetails.photo && (
+          <figure className="hero__portrait" data-hero-fade>
+            <span className="hero__portrait-tag">Commercial thinking.<br />Operational precision.</span>
+            <img src={personalDetails.photo.src} alt={personalDetails.photo.alt}
+              width={personalDetails.photo.width} height={personalDetails.photo.height}
+              fetchPriority="high" decoding="async" />
+            <figcaption><span>Ali Isa Mohsen</span><span>Bahrain · Zain Bahrain</span></figcaption>
+          </figure>
+        )}
       </div>
       <a className="hero__scroll" href={`#chapter-${journey[0].id}`} onClick={onBegin} data-hero-fade>
         <span>Scroll to explore my journey</span>

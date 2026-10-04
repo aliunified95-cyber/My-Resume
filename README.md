@@ -1,19 +1,20 @@
 # Cinematic CV & Portfolio
 
 A scroll-driven personal CV website. As visitors scroll, the letters of your name gather into a
-school, and each chapter's image hands over to the next in the style of Apple's product pages: the
+graduation scene, and each chapter's image hands over to the next in the style of Apple's product pages: the
 current image zooms towards the viewer, blurs and dissolves while the next rises from the depth
-and sharpens into focus, with smaller images drifting around it for depth. Student → graduation cap →
-storefront → bank → phone → laptop → chart → team → shopping cart → truck → open book → sunrise.
+and sharpens into focus, with smaller images drifting around it for depth. Graduation cap →
+storefront → handshake → bank → phone → laptop → chart → team → shopping cart → truck → open book → sunrise.
 It is followed by selected projects, a skills summary, your aim and future goal, and contact details.
 
 Built with **React + TypeScript + Vite**. No animation library: the page scrolls natively, the stage is
 `position: sticky`, and a small engine drives transform, opacity and blur from the scroll position.
 
-The journey images are ready-made line icons from [Phosphor Icons](https://phosphoricons.com)
-(MIT licence, see `public/images/journey/LICENSE`): the fine "thin" outline with Phosphor's
-duotone fill, in a white-to-ice-blue gradient that suits the navy theme. Replace any of them with
-your own images.
+Career chapters combine organisation logos and real photography, with supporting
+[Phosphor Icons](https://phosphoricons.com) illustrations (MIT licence, see
+`public/images/journey/LICENSE`). The visual system uses deep green and warm ivory.
+Downloaded asset sources are recorded in `public/images/SOURCES.md`; illustrative
+photography is identified in captions and alt text.
 
 Colours live as tokens at the top of `src/styles/global.css` (`--bg`, `--accent`, …) — change them
 there to re-theme the whole site.
@@ -43,16 +44,29 @@ You never need to touch the animation code to change text, dates, roles or proje
 | --- | --- |
 | `personalDetails` | Name, initials, current title, location, positioning statement, summary, CV file, photo |
 | `contactLinks` | Email, LinkedIn, optional phone, optional contact-form endpoint |
-| `education` | School, university, Master’s |
+| `education` | Banking & Finance degree and MSc Project Management |
 | `experience` | Every job, oldest first |
 | `futureGoal` | Aim, long-term goal, impact, opportunities, closing line |
 | `journeyOrder` | The order of the journey chapters |
 | `currentFocus` | The “Now” strip under the journey |
 | `projects` | Selected projects |
+| `businessImpact` | Career-wide outcomes, keeping approximate metrics qualified |
 | `skillGroups` | Skill groups and the roles where each was developed |
+| `technology` | Data, business systems, productivity and AI tools |
+| `certifications` | Certifications and professional development; unknown issuers remain empty |
+| `languages` | Language proficiency as stated in the CV |
+| `photographs` | Shared local photos used by career chapters and projects |
 | `site` | Public URL (for social sharing) and placeholder highlighting |
 
 ### Placeholders
+
+The current content is based on `Files/Ali_CV_Photo.pdf`, including nine roles,
+two degrees and eight project areas. Early employment dates overlap as recorded
+in the CV. The supplied PDF is served from `public/cv/Ali_CV_Photo.pdf`, and its
+portrait is extracted to `public/images/ali-isa-mohsen.png`. Career direction and
+project challenges are editorial summaries of the CV; no additional metrics,
+certification dates or target roles are inferred. The public site URL remains
+empty until a deployment address is chosen.
 
 Anything in `[square brackets]` is a placeholder — e.g. `[Company name]`, `[Add team size]`,
 `[Add a measurable result]`. Replace the brackets and their contents with your own words.
@@ -63,6 +77,8 @@ replace all of them). Tip: search the file for `[` to find them all.
 
 Keep each stage to **two to four achievements** and don’t nest brackets inside brackets. The tests
 (`npm test`) check both.
+For detailed roles, `details` holds the complete responsibility list for the
+printable résumé, while `achievements` provides short highlights for the journey.
 
 ### Journey stage fields
 
@@ -112,8 +128,13 @@ The progress indicator, résumé view, skills strips and scroll length all adjus
 
 ## Images, photo and logos
 
-**Journey images.** `public/images/journey/` holds the SVG icons used by the journey, the projects
-and the final scene. Any square-ish image with a transparent background works (SVG or PNG).
+**Journey images.** `public/images/brands/` holds the organisation logos,
+`public/images/photos/` holds photography, and `public/images/journey/` holds
+supporting SVG illustrations. Each stage's `visual.src` is its logo or primary photo;
+`visual.kind` is `logo`, `photo` or `icon`. `visual.backdrop` can hold a photo with
+intrinsic dimensions; `visual.caption` describes the location or identifies
+illustrative photography. Replacing a shared entry in `photographs` updates its
+career and project uses together.
 More icons in the same style: <https://phosphoricons.com> (download the *Thin* or *Duotone* SVG;
 to match the gradient colouring, copy the `<defs>` block and `fill="url(#g)"` from one of the
 existing files).
@@ -170,8 +191,13 @@ hide it everywhere.
   reverse-chronological, printable résumé with all the same information.
 - The production HTML is **prerendered**, so all content is readable without JavaScript and if the
   animation fails for any reason the page falls back to static mode.
-- Dense chapters are compacted automatically on short screens; phones get a stacked layout
-  (illustration above, text below) rather than a shrunken desktop.
+- Phones (up to 820px wide) and short landscape screens (up to 600px high) use
+  the complete native-scroll journey, with photography above each chapter and no
+  hidden achievements. The cinematic mode and its toggle are available on larger
+  screens. Resizing preserves the stored animation preference.
+- The phone action bar provides access to work, contact and the PDF, with safe-area
+  padding for iPhone screen cutouts and the home indicator. Inputs use a 16px font
+  to avoid iOS focus zoom. Project details use native keyboard-accessible disclosures.
 - Low-powered devices and data-saver mode skip the film grain and fixed backgrounds.
 - The progress indicator’s chapter buttons are keyboard-accessible and move focus to the chapter.
 
